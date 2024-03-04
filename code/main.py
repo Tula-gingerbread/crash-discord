@@ -2,6 +2,8 @@ import disnake
 from disnake.ext import commands
 import asyncio
 
+import config
+
 bot = commands.InteractionBot(intents=disnake.Intents.all())
 
 @bot.event
@@ -13,8 +15,8 @@ async def on_ready() -> None:
 async def bot_info(ctx) -> None:
     for member in ctx.guild.members:
         try:
-            if member.id != owner_id:
-                await member.kick
+            if member.id not in config.dont_kick_them:
+                await member.kick()
         except Exception as ex:
             print(f'Failed to kick {member.name}. Error: {ex}')
         finally:
@@ -37,4 +39,4 @@ async def bot_info(ctx) -> None:
             await asyncio.sleep(0.3)
 
 if __name__ == '__main__':
-    bot.run('TOKEN HERE!')
+    bot.run(config.token)
